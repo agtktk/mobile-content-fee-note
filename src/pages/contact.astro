@@ -1,0 +1,6 @@
+---
+import Base from '../layouts/Base.astro';
+import {site} from '../data/site';
+import ContactCard from '../components/ContactCard.astro';
+---
+<Base title="문의·정정 안내" description={site.name+' '+"내용 정정에 필요한 자료와 외부 상담 링크의 역할을 구분합니다."} crumbs={[{name:"문의·정정 안내",url:'/contact/'}]}><div class="page-intro"><h1>문의·정정 안내</h1><p>내용 정정에 필요한 자료와 외부 상담 링크의 역할을 구분합니다.</p></div><article class="prose-page"><h2>정정에 필요한 자료</h2><p>문제가 있는 페이지 주소, 원문 표현과 공식 근거의 해당 부분, 확인 시점을 정리하세요. 계정 암호·인증번호·등록 코드·신분증 등 민감 자료는 포함하지 않습니다.</p><h2>운영자 접수 채널 상태</h2><p>운영자의 독립적인 정정 접수 이메일이나 폼은 제공되지 않았습니다. 이 사이트에서 자료를 입력·전송하는 접수 폼은 운영하지 않습니다. 실제 접수 채널이 확보되면 안내를 보완합니다.</p><h2>외부 상담의 구분</h2><p>아래 연락처는 누티켓의 외부 상담 경로이며 운영자 정정 창구나 공식 결제 고객지원으로 안내하는 것이 아닙니다. 법률 전문 상담이나 환불 승인 권한을 확인하지 않았습니다. 기존 연락처 확인일은 {site.contact.verifiedAt}입니다.</p></article><ContactCard/></Base>

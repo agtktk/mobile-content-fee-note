@@ -1,0 +1,30 @@
+---
+import '../styles/global.css';
+import {site} from '../data/site';
+import ContactCTA from '../components/ContactCTA.astro';
+import FloatingContactBar from '../components/FloatingContactBar.astro';
+interface Props {title:string; description:string; noindex?:boolean; schema?:Record<string,unknown>; crumbs?:{name:string;url:string}[]}
+const {title,description,noindex=false,schema,crumbs=[]}=Astro.props;
+const origin = Astro.site!;
+const canonical = new URL(Astro.url.pathname,origin).href;
+const preview = import.meta.env.SITE_PREVIEW === 'true' || (import.meta.env.CF_PAGES === '1' && import.meta.env.CF_PAGES_BRANCH !== 'main');
+const structured = [
+ {'@context':'https://schema.org','@type':'WebSite','@id':new URL('/#website',origin).href,'name':site.name,'url':origin.href,'inLanguage':'ko-KR'},
+ {'@context':'https://schema.org','@type':Astro.url.pathname==='/about/'?'AboutPage':Astro.url.pathname==='/contact/'?'ContactPage':Astro.url.pathname.startsWith('/topics/')||Astro.url.pathname==='/articles/'||Astro.url.pathname==='/information-fee/'?'CollectionPage':'WebPage','@id':canonical+'#webpage',url:canonical,name:title,description,inLanguage:'ko-KR',isPartOf:{'@id':new URL('/#website',origin).href}},
+ ...(crumbs.length?[{'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{name:'홈',url:'/'},...crumbs].map((c,i)=>({'@type':'ListItem',position:i+1,name:c.name,item:new URL(c.url,origin).href}))}]:[]),
+ ...(schema?[{'@context':'https://schema.org','@id':canonical+'#article',...schema,mainEntityOfPage:{'@id':canonical+'#webpage'}}]:[])
+];
+---
+<!doctype html><html lang="ko"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/><title>{title} | {site.name}</title><meta name="description" content={description}/><link rel="canonical" href={canonical}/><meta name="robots" content={noindex||preview?'noindex, follow':'index, follow'}/><meta name="theme-color" content="#153f38"/><link rel="icon" href="/favicon.svg" type="image/svg+xml"/><link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml"/><meta property="og:type" content={schema?.['@type']==='Article'?'article':'website'}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content={site.name}/><meta property="og:locale" content="ko_KR"/><script type="application/ld+json" set:html={JSON.stringify(structured).replace(/</g,'\\u003c')}/></head>
+<body><a class="skip" href="#main">본문으로 이동</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="/"><span class="brand-icon" aria-hidden="true">결</span><span>{site.name}<small>PAYMENT REFERENCE</small></span></a><nav aria-label="주 탐색"><a aria-current={Astro.url.pathname==='/guide/'?'page':undefined} href="/guide/">핵심 가이드</a><a aria-current={Astro.url.pathname.startsWith('/topics/')?'page':undefined} href="/topics/">주제별 보기</a><a aria-current={Astro.url.pathname==='/articles/'?'page':undefined} href="/articles/">전체 글</a><a aria-current={Astro.url.pathname==='/search/'?'page':undefined} href="/search/">검색 <span aria-hidden="true">⌕</span></a></nav><div class="header-contact"><ContactCTA compact/></div></div></header>
+<main id="main" class="shell">{crumbs.length>0&&<nav class="breadcrumbs" aria-label="현재 위치"><a href="/">홈</a>{crumbs.map((c,i)=><><span aria-hidden="true">/</span>{i===crumbs.length-1?<span aria-current="page">{c.name}</span>:<a href={c.url}>{c.name}</a>}</>)}</nav>}<slot/></main>
+<footer class="site-footer"><div class="shell"><div class="footer-top"><div><a class="footer-brand" href="/">{site.name}</a><p>결제 조건을 확인하고, 다음 행동을 선택하세요.</p><p class="small">편집: {site.editor} · 운영자의 법적 신원 및 사업자 정보는 확인되지 않았습니다.</p></div><div><p class="small">외부 상담 대상 · {site.contact.name}</p><ContactCTA compact/><p class="small">카카오톡 ID {site.contact.kakaoId} · 연락처 기존 확인일 {site.contact.verifiedAt}</p></div></div><nav aria-label="하단 탐색"><a href="/about/">소개·편집 원칙</a><a href="/contact/">문의·정정 안내</a><a href="/privacy/">개인정보 안내</a><a href="/sitemap.xml">사이트맵</a><a href="/rss.xml">RSS</a></nav><p class="small">정보 제공 목적의 사이트입니다. 환불 승인, 거래 결과, 검색 순위 및 AI 답변 인용을 보장하지 않습니다.</p></div></footer><FloatingContactBar/>
+<script>
+ document.querySelectorAll<HTMLButtonElement>('.copy-id').forEach(button=>button.addEventListener('click',async()=>{
+   const status=button.parentElement?.parentElement?.querySelector('.copy-status');
+   try {await navigator.clipboard.writeText(button.dataset.copy||''); if(status)status.textContent='카카오톡 ID를 복사했습니다.';}
+   catch {if(status)status.textContent='복사할 수 없습니다. 표시된 ID를 직접 선택해 복사하세요.';}
+ }));
+</script>
+</body></html>

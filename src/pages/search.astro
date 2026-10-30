@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import {publishedArticles,articleUrl} from '../lib/content';
+const catalogue=(await publishedArticles()).map(a=>({title:a.data.title,description:a.data.description,keywords:a.data.keywords,url:articleUrl(a.id)}));
+---
+<Base title="내부 검색" description="공개된 콘텐츠 결제 가이드에서 환불, 한도, 청구와 계정 보호 정보를 검색합니다." noindex crumbs={[{name:'내부 검색',url:'/search/'}]}><div class="page-intro"><p class="eyebrow">FIND A GUIDE</p><h1>어떤 정보가 필요한가요?</h1><p>환불, 한도, 잔액처럼 궁금한 내용을 입력하세요. 공개된 글의 제목·설명·키워드에서 찾습니다.</p></div><form class="search-form" role="search" action="/search/" method="get"><label class="sr-only" for="query">검색어</label><input id="query" name="q" type="search" placeholder="예: 환불, 한도, 구글현금화" maxlength="100"/><button class="button" type="submit">검색</button></form><div class="search-tags" aria-label="추천 검색어">{['환불','한도','잔액','인증','정보이용료현금화'].map(q=><button type="button" data-query={q}>{q}</button>)}</div><p id="search-status" class="search-status" role="status" aria-live="polite">공개 글 {catalogue.length}개 · 검색어를 입력하면 목록을 좁힙니다.</p><div id="search-results" class="search-results">{catalogue.map(a=><article class="search-item"><h2><a href={a.url}>{a.title}</a></h2><p>{a.description}</p></article>)}</div><noscript><p>JavaScript가 꺼져 있어 전체 공개 글을 표시합니다. 브라우저의 페이지 찾기를 이용할 수 있습니다.</p></noscript><script id="search-data" type="application/json" set:html={JSON.stringify(catalogue).replace(/</g,'\\u003c')}/></Base>
+<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+<script>
+ type Item={title:string;description:string;keywords:string[];url:string};
+ const data:Item[]=JSON.parse(document.querySelector('#search-data')?.textContent||'[]');
+ const form=document.querySelector<HTMLFormElement>('.search-form')!;
+ const input=document.querySelector<HTMLInputElement>('#query')!;
+ const results=document.querySelector('#search-results')!;
+ const status=document.querySelector('#search-status')!;
+ const normalize=(s:string)=>s.normalize('NFKC').toLocaleLowerCase('ko-KR').replaceAll('컨텐츠','콘텐츠').replace(/\s/g,'');
+ function search(update=false){
+   const query=input.value.trim().slice(0,100);
+   const tokens=query.split(/\s+/).map(normalize).filter(Boolean);
+   const found=data.filter(a=>tokens.every(t=>normalize([a.title,a.description,...a.keywords].join(' ')).includes(t)));
+   results.replaceChildren();
+   for(const a of found){const article=document.createElement('article');article.className='search-item';const h=document.createElement('h2');const link=document.createElement('a');link.href=a.url;link.textContent=a.title;h.append(link);const p=document.createElement('p');p.textContent=a.description;article.append(h,p);results.append(article);}
+   status.textContent=query?`“${query}” 검색 결과 ${found.length}개`:`전체 공개 글 ${data.length}개`;
+   if(!found.length){const p=document.createElement('p');p.className='empty';p.textContent='일치하는 글이 없습니다. 더 짧은 단어로 검색하거나 전체 글을 확인하세요.';results.append(p);}
+   if(update){const url=new URL(location.href);if(query)url.searchParams.set('q',query);else url.searchParams.delete('q');history.replaceState(null,'',url);}
+ }
+ input.value=(new URL(location.href).searchParams.get('q')||'').slice(0,100);search();
+ form.addEventListener('submit',e=>{e.preventDefault();search(true);});
+ document.querySelectorAll<HTMLButtonElement>('[data-query]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.query||'';search(true);}));
+ window.addEventListener('popstate',()=>{input.value=(new URL(location.href).searchParams.get('q')||'').slice(0,100);search();});
+</script>

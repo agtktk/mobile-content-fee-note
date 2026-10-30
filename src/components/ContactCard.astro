@@ -1,0 +1,8 @@
+---
+import {site} from '../data/site';
+import ContactCTA from './ContactCTA.astro';
+---
+<aside class="contact-card" aria-label="외부 상담 안내">
+ <div><p class="eyebrow">EXTERNAL CONTACT · 외부 상담</p><h2>누티켓 상담 안내</h2><p>상담은 외부 대상인 누티켓으로 연결됩니다. 거래 조건과 비용은 상담 상대에게 직접 확인하세요.</p><p class="small">이 사이트와 누티켓의 관계·자격은 확인하지 않았습니다.</p></div>
+ <div><ContactCTA/><div class="copy-row"><span>카카오톡 ID <strong>{site.contact.kakaoId}</strong></span><button type="button" class="copy-id" data-copy={site.contact.kakaoId} aria-label="누티켓 카카오톡 ID 복사">ID 복사</button></div><span class="copy-status small" role="status" aria-live="polite"></span><p class="small">연락처 기존 확인일 {site.contact.verifiedAt} · <a href={site.contact.sourceUrl} target="_blank" rel="noopener noreferrer external">제공 출처 ↗</a></p></div>
+</aside>

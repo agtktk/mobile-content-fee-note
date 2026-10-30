@@ -1,0 +1,6 @@
+---
+import Base from '../layouts/Base.astro';
+import {site} from '../data/site';
+import ContactCard from '../components/ContactCard.astro';
+---
+<Base title={site.keyword+' 확인 순서'} description={site.keyword+'를 검색한 뒤 확인해야 할 질문을 단계별로 정리하고, 확인 결과와 미확인 항목을 나누는 절차를 안내합니다.'} crumbs={[{name:'확인 순서',url:'/guide/'}]}><div class="page-intro"><p class="eyebrow">BEFORE YOU DECIDE</p><h1>{site.keyword} 확인 순서</h1><p>어떤 결과를 원하는지 먼저 정하고, 설명을 받은 사실과 실제 기록으로 확인한 상태를 구분합니다.</p></div><article class="prose-page"><h2>1. 현재 가진 기록을 선택하세요</h2><p>영수증·명세서·설정 화면·상대 안내 중 현재 있는 자료를 정리합니다. 아직 주문이 없다면 실제 구매한 것으로 기록하지 마세요. 다른 사람에게 자료를 보여줄 때는 문제 설명에 필요한 범위로 줄입니다.</p><h2>2. 다음 질문을 적어 보세요</h2><ol>{site.steps.map(step=><li>{step.name}와 관련해 무엇을 확인했고 무엇이 남았는지 적습니다.</li>)}</ol><h2>3. 확인된 사실과 결과를 나누세요</h2><p>안내 메시지를 받았다는 사실, 공식 처리가 접수됐다는 사실과 실제 반영된 결과를 각각 기록하세요. 확인하지 못한 항목은 추측으로 채우지 않습니다.</p><h2>상황별 본문과 근거 확인</h2><p><a href={'/articles/'+site.slug+'/'}>{site.keyword}: {site.tag} 가이드 읽기</a></p><p><a href="/contact/">오류를 발견했다면 정정에 필요한 자료 확인</a></p></article><ContactCard/></Base>

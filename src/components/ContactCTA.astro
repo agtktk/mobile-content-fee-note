@@ -1,0 +1,8 @@
+---
+import {site,phoneHref} from '../data/site';
+const { compact = false } = Astro.props;
+---
+<div class:list={['contact-actions',{compact}]}>
+  <a class="button kakao" href={site.contact.kakaoUrl} target="_blank" rel="noopener noreferrer external">{compact ? '누티켓 카카오톡' : '누티켓 카카오톡 상담'} <span aria-hidden="true">↗</span></a>
+  <a class="button secondary" href={phoneHref}>{compact ? '전화 상담' : `전화 ${site.contact.phone}`}</a>
+</div>

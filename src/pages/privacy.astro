@@ -1,0 +1,6 @@
+---
+import Base from '../layouts/Base.astro';
+import {site} from '../data/site';
+
+---
+<Base title="개인정보 안내" description={site.name+' '+"내부 검색·외부 링크·클립보드와 호스팅에 관한 개인정보 처리 범위를 안내합니다."} crumbs={[{name:"개인정보 안내",url:'/privacy/'}]}><div class="page-intro"><h1>개인정보 안내</h1><p>내부 검색·외부 링크·클립보드와 호스팅에 관한 개인정보 처리 범위를 안내합니다.</p></div><article class="prose-page"><h2>사이트에서 제공하는 기능</h2><p>현재 회원가입·게시판·상담 접수 폼·분석 추적 코드를 제공하지 않습니다. 내부 검색은 공개된 글 목록을 브라우저에서 필터링합니다. 검색어가 포함된 주소는 방문 기록이나 호스팅 접근 로그 등에 남을 수 있습니다.</p><h2>호스팅과 외부 연결</h2><p>Cloudflare Pages를 통해 정적 페이지를 제공합니다. 호스팅 과정의 기술 정보 처리는 제공자의 정책을 확인하세요. 상담이나 공식 출처 링크를 열면 해당 서비스의 안내가 적용됩니다.</p><h2>클립보드와 문의</h2><p>복사 버튼을 누르면 화면에 표시한 카카오톡 ID를 클립보드에 기록합니다. 클립보드 내용을 읽어 수집하지 않습니다. 운영자 자체 접수 채널은 제공되지 않았으며 개인정보 관련 안내 변경 시 실제 기능을 반영합니다.</p><p><a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare 개인정보 정책</a></p></article></Base>

@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import {publishedArticles} from '../../lib/content';
+import {site} from '../../data/site';
+const articles=await publishedArticles();
+---
+<Base title={"전체 글"} description={site.keyword+' '+"발행된 핵심 가이드와 공식 근거를 찾습니다."} crumbs={[{name:"전체 글",url:"/articles/"}]}><div class="page-intro"><p class="eyebrow">READING INDEX</p><h1>전체 글</h1><p>{site.intro}</p></div><section><h2>이 주제에서 확인할 가이드</h2><div class="articles-grid">{articles.map(article=><ArticleCard article={article}/>)}</div><p><a href="/guide/">확인 질문을 정리하는 순서</a> · <a href="/topics/basics/">주제의 범위</a> · <a href="/about/">편집 원칙</a></p></section></Base>

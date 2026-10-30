@@ -1,0 +1,11 @@
+---
+import {topics} from '../data/site';
+import {articleUrl} from '../lib/content';
+import type {CollectionEntry} from 'astro:content';
+interface Props {article:CollectionEntry<'articles'>; index?:number}
+const {article,index} = Astro.props;
+---
+<a class="article-card" href={articleUrl(article.id)}>
+ <div class="card-meta"><span>{topics.find(t=>t.id===article.data.topic)?.name}</span>{index !== undefined && <span class="index">{String(index+1).padStart(2,'0')}</span>}</div>
+ <h3>{article.data.title}</h3><p>{article.data.description}</p><div class="card-bottom"><time datetime={article.data.updatedAt}>{article.data.updatedAt}</time><span aria-hidden="true">↗</span></div>
+</a>
